@@ -21,15 +21,12 @@ streamlit-cropper
 
 Các thư viện bên trên có thể cài bằng ``` python packages ``` có sẵn trong pycharm
 
-![img.png](img.png)
-
 ### Configuration
 
 #### Đối với máy không có GPU NVIDIA
 
 - Cài thư viện faiss-cpu (1.8.0)
 - Thay 'cuda:0' bằng 'cpu' để chạy trên CPU trong file indexing.py và demo.py
-![img_1.png](img_1.png)
 
 #### Đối với máy có GPU NVIDIA
 - Cài thư viện faiss 
