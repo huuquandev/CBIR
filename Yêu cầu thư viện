@@ -1,0 +1,14 @@
+python 3.8
+torch 2.4.1
+torchaudio 2.4.1
+torchvision 0.19.1
+numpy 1.24.4
+faiss (faiss-cpu đối với máy chỉ chạy trên cpu không có card NVIDIA )
+(lưu ý: Chỉ cài faiss hoặc faiss-cpu)
+
+Ngoài ra 
+
+opencv-python
+scikit-image
+streamlit
+streamlit-cropper
