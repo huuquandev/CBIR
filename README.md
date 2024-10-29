@@ -26,7 +26,7 @@ Các thư viện bên trên có thể cài bằng ``` python packages ``` có s�
 #### Đối với máy không có GPU NVIDIA
 
 - Cài thư viện faiss-cpu (1.8.0)
-- Thay 'cuda:0' bằng 'cpu' để chạy trên CPU trong file indexing.py và demo.py
+- Thay 'cuda:0' bằng 'cpu' để chạy trên CPU trong file index.py và image_feature_indexing.py
 
 #### Đối với máy có GPU NVIDIA
 - Cài thư viện faiss 
