@@ -29,37 +29,37 @@ def get_image_list(image_root):
 
 
 def retrieve_image(img, feature_extractor):
-    if (feature_extractor == 'VGG16'):
+    if feature_extractor == 'VGG16':
         extractor = MyVGG16(device)
-    elif (feature_extractor == 'Resnet50'):
+    elif feature_extractor == 'Resnet50':
         extractor = MyResnet50(device)
-    elif (feature_extractor == 'RGBHistogram'):
+    elif feature_extractor == 'RGBHistogram':
         extractor = RGBHistogram(device)
-    elif (feature_extractor == 'LBP'):
+    elif feature_extractor == 'LBP':
         extractor = LBP(device)
 
     transform = get_transformation()
-
     img = img.convert('RGB')
     image_tensor = transform(img)
     image_tensor = image_tensor.unsqueeze(0).to(device)
     feat = extractor.extract_features(image_tensor)
 
     indexer = faiss.read_index(feature_root + '/' + feature_extractor + '.index.bin')
+    distances, indices = indexer.search(feat, k=11)
 
-    _, indices = indexer.search(feat, k=11)
-
-    return indices[0]
+    return distances[0], indices[0]  # Trả về cả khoảng cách và chỉ số
 
 
-def sort_images_by(criteria, indices, image_list):
+
+def sort_images_by(criteria, indices, distances, image_list):
     if criteria == "Khoảng cách đặc trưng gần nhất":
-        sorted_indices = sorted(indices)  # sắp xếp tăng dần
+        sorted_indices = [x for _, x in sorted(zip(distances, indices))]  # sắp xếp theo khoảng cách tăng dần
     elif criteria == "Khoảng cách đặc trưng xa nhất":
-        sorted_indices = sorted(indices, reverse=True) # Sắp xếp giảm dần
+        sorted_indices = [x for _, x in sorted(zip(distances, indices), reverse=True)]  # sắp xếp theo khoảng cách giảm dần
     else:
         sorted_indices = indices
     return sorted_indices
+
 
 
 
@@ -98,7 +98,7 @@ def main():
             loading_message.info('**Đang tìm kiếm... Vui lòng đợi.**')
             start = time.time()
 
-            retriev = retrieve_image(cropped_img, option)
+            distances, retriev = retrieve_image(cropped_img, option)
             image_list = get_image_list(image_root)
             end = time.time()
             loading_message.empty()
@@ -109,7 +109,7 @@ def main():
             sort_criteria = st.selectbox('Chọn tiêu chí sắp xếp', ('Khoảng cách đặc trưng gần nhất', 'Khoảng cách đặc trưng xa nhất'))
 
             # Sắp xếp kết quả tìm kiếm
-            sorted_indices = sort_images_by(sort_criteria, retriev, image_list)
+            sorted_indices = sort_images_by(sort_criteria, retriev, distances, image_list)
 
             # Hiển thị kết quả
             st.markdown('<div class="subheader">Kết quả tìm thấy</div>', unsafe_allow_html=True)
